@@ -1,1 +1,11 @@
 
+{
+  "trailingSlash": true,
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/api/:match*", "destination": "/api/:match*" }
+  ],
+  "redirects": [
+    { "source": "/admin", "destination": "/admin/index.html", "permanent": false }
+  ]
+}
