@@ -4,7 +4,13 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Lawrence Auto Sales – CMS</title>
+
+  <!-- IMPORTANT: tell Decap not to auto-init -->
+  <script>window.CMS_MANUAL_INIT = true;</script>
+
+  <!-- Decap CMS (UMD). Keep this exact and load after CMS_MANUAL_INIT -->
   <script defer src="https://cdn.jsdelivr.net/npm/decap-cms@3.9.0/dist/decap-cms.js"></script>
+
   <style>
     html,body{height:100%;margin:0;background:#0b0d10;color:#e8eef4}
     .boot{height:100%;display:grid;place-items:center;font:16px/1.4 system-ui,Segoe UI,Roboto,Arial}
@@ -12,22 +18,37 @@
 </head>
 <body>
   <div id="cms-root" class="boot">Loading CMS…</div>
+
   <script>
-    if (!window.__CMS_BOOTED__) {
-      window.__CMS_BOOTED__ = true;
-      window.addEventListener('DOMContentLoaded', function () {
-        var boot = function () {
-          var CMS = window.CMS || window.DecapCms;
-          if (!CMS) return false;
-          var root = document.getElementById('cms-root') || document.body.appendChild(Object.assign(document.createElement('div'),{id:'cms-root'}));
-          CMS.init({ config: '/admin/config.yml' });
-          return true;
-        };
+    // Single, guarded boot:
+    (function () {
+      let booted = false;
+
+      function boot() {
+        if (booted) return;
+        const CMS = window.CMS || window.DecapCms;
+        if (!CMS) return; // not ready yet
+
+        let root = document.getElementById('cms-root');
+        if (!root) {
+          root = document.createElement('div');
+          root.id = 'cms-root';
+          document.body.appendChild(root);
+        }
+
+        CMS.init({ config: '/admin/config.yml' });
+        booted = true;
+      }
+
+      window.addEventListener('DOMContentLoaded', () => {
+        // Try now, then poll briefly in case the script lags a tick
         if (!boot()) {
-          var tries = 0, tm = setInterval(function () { if (boot() || ++tries >= 50) clearInterval(tm); }, 100);
+          let tries = 0, tm = setInterval(() => {
+            if (boot() || ++tries > 50) clearInterval(tm);
+          }, 100);
         }
       }, { once: true });
-    }
+    })();
   </script>
 </body>
 </html>
