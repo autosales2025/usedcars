@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lawrence Auto Sales – LLC</title>
+  <link href="styles.css" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <h1>Lawrence Auto Sales – LLC</h1>
+    </div>
+
+    <!-- Filters -->
+    <div class="controls filters">
+      <input id="q" type="search" placeholder="Search (make, model, color)…" />
+      <select id="bodyType">
+        <option value="">Body type</option>
+        <option>Sedan</option><option>SUV</option><option>Truck</option>
+        <option>Coupe</option><option>Van</option><option>Wagon</option>
+      </select>
+      <select id="yearMin"><option value="">Year min</option></select>
+      <select id="yearMax"><option value="">Year max</option></select>
+      <input id="priceMax" type="number" min="0" step="500" placeholder="Max price" />
+      <label class="chk"><input id="showSold" type="checkbox" /> Show sold</label>
+      <select id="sortBy">
+        <option value="featuredNew">Featured / New</option>
+        <option value="priceAsc">Price ↑</option>
+        <option value="priceDesc">Price ↓</option>
+        <option value="yearDesc">Year ↓</option>
+        <option value="yearAsc">Year ↑</option>
+        <option value="mileageAsc">Mileage ↑</option>
+        <option value="mileageDesc">Mileage ↓</option>
+      </select>
+      <button id="resetBtn">Reset</button>
+      <span id="activeCount" class="badge-count" hidden>0</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <p id="stats" class="stats"></p>
+    <section id="grid" class="grid"></section>
+  </main>
+
+  <!-- Card template -->
+  <template id="card-tpl">
+    <article class="card">
+      <div class="media">
+        <img class="thumb" alt="" />
+        <video class="walkaround" controls hidden playsinline></video>
+        <span class="flag sold" hidden>Sold</span>
+        <span class="flag featured" hidden>Featured</span>
+        <button class="gallery-btn">View photos</button>
+      </div>
+      <div class="card-body info">
+        <h3 class="title"></h3>
+        <p class="meta"></p>
+        <p class="desc"></p>
+        <div class="row price-row">
+          <span class="price"></span>
+          <span class="mileage"></span>
+          <span class="condition"></span>
+        </div>
+        <div class="actions">
+          <button class="photos-btn btn small">Photos</button>
+          <a class="email btn outline" href="#">Email</a>
+          <a class="wa btn outline" href="#">Call</a>
+          <button class="details-btn btn">Details</button>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <!-- Lightbox -->
+  <dialog id="lightbox">
+    <button id="closeLb">×</button>
+    <img id="lbImg" alt="Photo" />
+    <div id="lbDots" class="dots"></div>
+  </dialog>
+
+  <!-- Details Modal -->
+  <dialog id="detailsDlg" class="dlg details details-dialog">
+    <button id="detailsClose" class="x">×</button>
+    <div class="details-wrap">
+      <div class="left details-media">
+        <img id="detailsHero" class="hero" alt="" />
+        <div id="detailsThumbs" class="thumbs"></div>
+      </div>
+      <div class="right details-info">
+        <h3 id="detailsTitle"></h3>
+        <p id="detailsPrice" class="price big"></p>
+        <ul id="detailsSpecs" class="specs"></ul>
+        <div id="detailsFeatures" class="chips features"></div>
+        <p id="detailsDesc" class="desc"></p>
+        <div class="details-actions actions">
+          <a id="detailsEmail" class="btn outline" href="#">Email</a>
+          <a id="detailsCall" class="btn" href="#">Call</a>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Contact & Hours -->
+  <section class="contact-card container">
+    <div class="contact-head">
+      <h2>Contact & Hours</h2>
+      <span id="openBadge" class="open-badge">Checking…</span>
+    </div>
+
+    <div class="contact-body">
+      <div class="contact-info">
+        <p><b>Phone:</b> <a id="contactPhone" href="#"></a></p>
+        <p><b>Email:</b> <a id="contactEmail" href="#"></a></p>
+        <p><b>Address:</b> <span id="contactAddress"></span> —
+          <a id="directionsLink" target="_blank" rel="noopener">Directions</a>
+        </p>
+        <p class="next-open" id="nextOpenText"></p>
+        <p class="tz">All times in <span id="tzLabel"></span></p>
+      </div>
+      <div class="hours">
+        <table><tbody id="hoursList"></tbody></table>
+        <p class="tz small">Timezone: <span id="tzLabel2"></span></p>
+      </div>
+    </div>
+
+    <!-- MAP (no API key needed) -->
+    <div class="map-wrap">
+      <h3 class="map-title">Map</h3>
+      <iframe
+        id="mapFrame"
+        loading="lazy"
+        allowfullscreen
+        referrerpolicy="no-referrer-when-downgrade"
+        title="Map to our location">
+      </iframe>
+    </div>
+
+    <!-- Contact form -->
+    <div class="contact-form-wrap">
+      <h3>Contact us</h3>
+      <form id="contactForm" class="form">
+        <div class="form-row">
+          <label>Name <input id="cfName" required /></label>
+          <label>Email <input id="cfEmail" type="email" required /></label>
+        </div>
+        <div class="form-row">
+          <label>Phone <input id="cfPhone" type="tel" placeholder="+1 555 123 4567" /></label>
+          <label>Vehicle (optional)
+            <select id="cfVehicle"></select>
+          </label>
+        </div>
+        <div class="form-row">
+          <label>Best time to reach you <input id="cfBestTime" placeholder="e.g., afternoons" /></label>
+        </div>
+        <label>Message <textarea id="cfMessage" required rows="4"></textarea></label>
+        <div class="form-actions">
+          <button id="cfSubmit" class="btn">Send</button>
+          <div id="cfStatus" class="cf-status"></div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Appointment form -->
+    <div class="contact-form-wrap">
+      <h3>Book an appointment</h3>
+      <form id="apptForm" class="form">
+        <div class="form-row">
+          <label>Name <input id="apName" required /></label>
+          <label>Email <input id="apEmail" type="email" required /></label>
+        </div>
+        <div class="form-row">
+          <label>Phone <input id="apPhone" type="tel" /></label>
+          <label>Vehicle <select id="apVehicle" required></select></label>
+        </div>
+        <div class="form-row">
+          <label>Date <input id="apDate" type="date" required /></label>
+          <label>Time <select id="apSlot" required><option value="">Pick a date first</option></select></label>
+        </div>
+        <label>Notes <textarea id="apNotes" rows="3"></textarea></label>
+        <div class="form-actions">
+          <button id="apSubmit" class="btn">Book appointment</button>
+          <div id="apStatus" class="cf-status"></div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    © <span id="year"></span> Lawrence Auto Sales – LLC
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

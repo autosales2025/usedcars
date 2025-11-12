@@ -1,0 +1,52 @@
+[
+  {
+    "id": "LAS-010",
+    "year": 2019,
+    "make": "Nissan",
+    "model": "Altima",
+    "trim": "SV",
+    "price": 13950,
+    "mileage": 64000,
+    "bodyType": "Sedan",
+    "fuel": "Gasoline",
+    "transmission": "Automatic",
+    "color": "Black",
+    "features": ["Blind Spot Monitor", "Remote Start"],
+    "location": "Olathe, KS",
+    "photos": ["images/thumbnail-5.jpg"],
+    "contact": { "email": "sales@yourdomain.com", "phone": "+1 555 000 1234" },
+    "featured": true,
+    "description": "Clean title, SV trim, remote start, drives great."
+  },
+  {
+    "id": "LAS-011",
+    "year": 2017,
+    "make": "Chevrolet",
+    "model": "Equinox LT",
+    "price": 10990,
+    "mileage": 88500,
+    "bodyType": "SUV",
+    "fuel": "Gasoline",
+    "transmission": "Automatic",
+    "color": "Silver",
+    "photos": ["images/thumbnail.jpg"],
+    "contact": { "email": "sales@yourdomain.com", "phone": "+1 555 000 5678" },
+    "description": "LT package, well-maintained, ready to go."
+  },
+  {
+    "id": "LAS-012",
+    "year": 2015,
+    "make": "Hyundai",
+    "model": "Elantra",
+    "price": 6950,
+    "mileage": 112300,
+    "bodyType": "Sedan",
+    "fuel": "Gasoline",
+    "transmission": "Automatic",
+    "color": "White",
+    "status": "sold",
+    "photos": ["images/toyota.jpg"],
+    "contact": { "email": "sales@yourdomain.com", "phone": "+1 555 000 9999" },
+    "description": "Reliable daily driver. Recently sold."
+  }
+]
