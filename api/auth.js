@@ -1,26 +1,21 @@
 // /api/auth.js
-export default function handler(req, res) {
-  const { GITHUB_CLIENT_ID, BASE_URL } = process.env;
-  if (!GITHUB_CLIENT_ID || !BASE_URL) {
-    res.status(500).json({ ok: false, error: 'Missing env vars (GITHUB_CLIENT_ID, BASE_URL)' });
+module.exports = (req, res) => {
+  const BASE_URL = process.env.BASE_URL;
+  const CLIENT_ID = process.env.GITHUB_CLIENT_ID;
+
+  if (!BASE_URL || !CLIENT_ID) {
+    res.status(500).json({ ok: false, error: "Missing env vars" });
     return;
   }
 
-  // Create a simple state value (ideally use crypto.randomUUID() on Node 18+)
-  const state = Math.random().toString(36).slice(2);
+  const state = (req.query.state || "decap").toString();
 
-  // Persist state briefly in a cookie (so we can compare in callback if you want)
-  res.setHeader('Set-Cookie', `oauth_state=${state}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=600`);
+  const authorizeUrl = new URL("https://github.com/login/oauth/authorize");
+  authorizeUrl.searchParams.set("client_id", CLIENT_ID);
+  authorizeUrl.searchParams.set("scope", "repo,user:email");
+  authorizeUrl.searchParams.set("redirect_uri", `${BASE_URL}/api/callback`);
+  authorizeUrl.searchParams.set("state", state);
 
-  const redirectUri = `${BASE_URL}/api/callback`; // must match your GitHub App callback URL
-  const params = new URLSearchParams({
-    client_id: GITHUB_CLIENT_ID,
-    redirect_uri: redirectUri,
-    scope: 'repo,user:email',
-    state
-  });
-
-  const authUrl = `https://github.com/login/oauth/authorize?${params.toString()}`;
-  res.writeHead(302, { Location: authUrl });
+  res.writeHead(302, { Location: authorizeUrl.toString() });
   res.end();
-}
+};
