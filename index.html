@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lawrence Auto Sales – Admin</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/decap-cms@3.9.0/dist/decap-cms.js"></script>
+  <style>
+    html,body{height:100%;margin:0;background:#0b0d10;color:#e8eef4}
+    .boot{height:100%;display:grid;place-items:center;font:16px/1.4 system-ui,Segoe UI,Roboto,Arial}
+  </style>
+</head>
+<body>
+  <div id="cms-root" class="boot">Loading CMS…</div>
+  <script>
+    if (!window.__CMS_BOOTED__) {
+      window.__CMS_BOOTED__ = true;
+      window.addEventListener('DOMContentLoaded', function () {
+        var boot = function () {
+          var CMS = window.CMS || window.DecapCms;
+          if (!CMS) return false;
+          CMS.init({ config: '/admin/config.yml' });
+          return true;
+        };
+        if (!boot()) {
+          let tries=0,tm=setInterval(()=>{if(boot()||++tries>50)clearInterval(tm)},100);
+        }
+      }, {once:true});
+    }
+  </script>
+</body>
+</html>
