@@ -1,4 +1,5 @@
 {
+  "version": 2,
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
@@ -6,10 +7,6 @@
     { "source": "/admin/(.*)", "destination": "/admin/index.html" }
   ],
   "functions": {
-    "api/**/*.js": {
-      "runtime": "nodejs18.x"
-    }
+    "api/**/*.js": { "runtime": "nodejs22.x" }
   }
 }
-
-    
