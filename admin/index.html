@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Lawrence Auto Sales – Admin</title>
+  <title>Lawrence Auto Sales – CMS</title>
   <script defer src="https://cdn.jsdelivr.net/npm/decap-cms@3.9.0/dist/decap-cms.js"></script>
   <style>
     html,body{height:100%;margin:0;background:#0b0d10;color:#e8eef4}
@@ -19,13 +19,14 @@
         var boot = function () {
           var CMS = window.CMS || window.DecapCms;
           if (!CMS) return false;
+          var root = document.getElementById('cms-root') || document.body.appendChild(Object.assign(document.createElement('div'),{id:'cms-root'}));
           CMS.init({ config: '/admin/config.yml' });
           return true;
         };
         if (!boot()) {
-          let tries=0,tm=setInterval(()=>{if(boot()||++tries>50)clearInterval(tm)},100);
+          var tries = 0, tm = setInterval(function () { if (boot() || ++tries >= 50) clearInterval(tm); }, 100);
         }
-      }, {once:true});
+      }, { once: true });
     }
   </script>
 </body>
