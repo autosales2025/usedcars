@@ -1,39 +1,4 @@
 // api/auth.js
-const BASE_URL = process.env.BASE_URL; // e.g. https://usedcars-one.vercel.app
-const CLIENT_ID = process.env.GITHUB_CLIENT_ID; // from GitHub OAuth App
-
-module.exports = async (req, res) => {
-  try {
-    // Health check (useful in a browser)
-    if (req.method === 'GET' && !req.query.provider) {
-      res.status(200).json({ ok: true, hint: "Add ?provider=github to begin OAuth" });
-      return;
-    }
-
-    // Only GitHub is supported here
-    if (req.query.provider !== 'github') {
-      res.status(400).json({ error: 'Unsupported provider' });
-      return;
-    }
-
-    const scope = req.query.scope || 'repo,user:email';
-    const state = req.query.state || 'decap';
-
-    if (!BASE_URL || !CLIENT_ID) {
-      res.status(500).json({ error: 'Missing env: BASE_URL or GITHUB_CLIENT_ID' });
-      return;
-    }
-
-    const redirect_uri = `${BASE_URL}/api/callback`;
-    const githubAuthUrl = new URL('https://github.com/login/oauth/authorize');
-    githubAuthUrl.searchParams.set('client_id', CLIENT_ID);
-    githubAuthUrl.searchParams.set('redirect_uri', redirect_uri);
-    githubAuthUrl.searchParams.set('scope', scope);
-    githubAuthUrl.searchParams.set('state', state);
-
-    res.writeHead(302, { Location: githubAuthUrl.toString() });
-    res.end();
-  } catch (e) {
-    res.status(500).json({ error: e.message || 'auth error' });
-  }
-};
+export default function handler(req, res) {
+  res.status(200).json({ ok: true, message: "Auth endpoint active" });
+}
