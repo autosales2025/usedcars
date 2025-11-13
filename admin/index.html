@@ -36,24 +36,17 @@
           document.body.appendChild(root);
         }
 
-        // Your Decap config is in /admin/config.yml
-        CMS.init();
+        // 👉 IMPORTANT: tell Decap exactly where config.yml is
+        CMS.init({ config: '/admin/config.yml' });
+
         booted = true;
       }
 
-      // Try multiple times, then give up.
-      let tries = 0;
-      const timer = setInterval(function () {
-        tries++;
-        if (window.CMS || window.DecapCms) {
-          clearInterval(timer);
-          boot();
-        } else if (tries > 60) {
-          clearInterval(timer);
-          const el = document.getElementById('cms-root');
-          if (el) el.textContent = 'CMS failed to load. Please refresh.';
-        }
-      }, 250);
+      if (document.readyState === 'complete') {
+        boot();
+      } else {
+        window.addEventListener('load', boot);
+      }
     })();
   </script>
 </body>
