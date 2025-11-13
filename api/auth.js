@@ -1,6 +1,6 @@
 // /api/auth.js
 module.exports = (req, res) => {
-  const BASE_URL = process.env.BASE_URL;
+  const BASE_URL  = process.env.BASE_URL;
   const CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 
   if (!BASE_URL || !CLIENT_ID) {
