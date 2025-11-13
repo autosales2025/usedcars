@@ -4,11 +4,6 @@
   "trailingSlash": false,
   "rewrites": [
     { "source": "/admin", "destination": "/admin/index.html" },
-    { "source": "/admin/", "destination": "/admin/index.html" }
-  ],
-  "functions": {
-    "api/**.js": {
-      "runtime": "nodejs22.x"
-    }
-  }
+    { "source": "/admin/(.*)", "destination": "/admin/index.html" }
+  ]
 }
