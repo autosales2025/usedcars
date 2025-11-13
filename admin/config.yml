@@ -1,11 +1,11 @@
 backend:
   name: github
-  repo: autosales2025/usedcars        # your GitHub username/repo
+  repo: autosales2025/usedcars       # your GitHub username/repo
   branch: main
   base_url: https://usedcars-one.vercel.app
   auth_endpoint: /api/auth
 
-media_folder: "images"               # where uploaded photos go
+media_folder: "images"               # where uploaded photos go (in the repo)
 public_folder: "/images"             # how they’re referenced on the site
 
 collections:
@@ -18,23 +18,81 @@ collections:
         name: "cars"
         format: "json"
         fields:
-          - { label: "ID",       name: "id",        widget: "string" }
-          - { label: "Year",     name: "year",      widget: "number" }
-          - { label: "Make",     name: "make",      widget: "string" }
-          - { label: "Model",    name: "model",     widget: "string" }
-          - { label: "Trim",     name: "trim",      widget: "string", required: false }
-          - { label: "Price",    name: "price",     widget: "number" }
-          - { label: "Mileage",  name: "mileage",   widget: "number" }
-          - { label: "Body Type",name: "bodyType",  widget: "string" }
-          - { label: "Fuel",     name: "fuel",      widget: "string" }
-          - { label: "Transmission", name: "transmission", widget: "string" }
-          - { label: "Color",    name: "color",     widget: "string" }
+          - label: "ID"
+            name: "id"
+            widget: "string"
+
+          - label: "Year"
+            name: "year"
+            widget: "number"
+
+          - label: "Make"
+            name: "make"
+            widget: "string"
+
+          - label: "Model"
+            name: "model"
+            widget: "string"
+
+          - label: "Trim"
+            name: "trim"
+            widget: "string"
+            required: false
+
+          - label: "Price"
+            name: "price"
+            widget: "number"
+
+          - label: "Mileage"
+            name: "mileage"
+            widget: "number"
+
+          - label: "Body Type"
+            name: "bodyType"
+            widget: "string"
+
+          - label: "Fuel"
+            name: "fuel"
+            widget: "string"
+
+          - label: "Transmission"
+            name: "transmission"
+            widget: "string"
+
+          - label: "Color"
+            name: "color"
+            widget: "string"
+
           - label: "Photos"
             name: "photos"
             widget: "list"
-            field: { label: "Photo", name: "photo", widget: "image" }
-          - { label: "Contact Email",  name: "contact.email", widget: "string" }
-          - { label: "Contact Phone",  name: "contact.phone", widget: "string" }
-          - { label: "Featured", name: "featured", widget: "boolean", required: false }
-          - { label: "Status",   name: "status",   widget: "select", options: ["available", "sold"], required: false }
-          - { label: "Description", name: "description", widget: "text", required: false }
+            field:
+              label: "Photo"
+              name: "photo"
+              widget: "image"
+
+          - label: "Contact Email"
+            name: "contact_email"
+            widget: "string"
+
+          - label: "Contact Phone"
+            name: "contact_phone"
+            widget: "string"
+
+          - label: "Featured"
+            name: "featured"
+            widget: "boolean"
+            required: false
+
+          - label: "Status"
+            name: "status"
+            widget: "select"
+            options:
+              - "available"
+              - "sold"
+            required: false
+
+          - label: "Description"
+            name: "description"
+            widget: "text"
+            required: false
