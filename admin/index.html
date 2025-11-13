@@ -6,47 +6,69 @@
   <title>Lawrence Auto Sales – CMS</title>
 
   <!-- IMPORTANT: tell Decap not to auto-init -->
-  <script>window.CMS_MANUAL_INIT = true;</script>
+  <script>
+    window.CMS_MANUAL_INIT = true;
+  </script>
 
-  <!-- Decap CMS (UMD). Keep this exact and load after CMS_MANUAL_INIT -->
-  <script defer src="https://cdn.jsdelivr.net/npm/decap-cms@3.9.0/dist/decap-cms.js"></script>
+  <!-- Decap CMS (UMD) via CDN -->
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/decap-cms@3.9.0/dist/decap-cms.js">
+  </script>
 
   <style>
-    html,body{height:100%;margin:0;background:#0b0d10;color:#e8eef4}
-    .boot{height:100%;display:grid;place-items:center;font:16px/1.4 system-ui,Segoe UI,Roboto,Arial}
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: #0b0d10;
+      color: #e8eef4;
+      font: 16px/1.5 system-ui, -apple-system, BlinkMacSystemFont,
+            "Segoe UI", Roboto, sans-serif;
+    }
+    .boot {
+      height: 100%;
+      display: grid;
+      place-items: center;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
-  <div id="cms-root" class="boot">Loading CMS…</div>
+  <div id="cms-root" class="boot">
+    Loading CMS…
+  </div>
 
   <script>
-    // Single, guarded boot:
+    // Single, guarded boot function to avoid double-init
     (function () {
       let booted = false;
 
       function boot() {
         if (booted) return;
+
+        // Decap exposes either window.DecapCms or window.CMS
         const CMS = window.CMS || window.DecapCms;
-        if (!CMS) return; // not ready yet
+        if (!CMS) return; // script not ready yet
 
-        let root = document.getElementById('cms-root');
-        if (!root) {
-          root = document.createElement('div');
-          root.id = 'cms-root';
-          document.body.appendChild(root);
-        }
+        const root = document.getElementById('cms-root') || (function () {
+          const el = document.createElement('div');
+          el.id = 'cms-root';
+          document.body.appendChild(el);
+          return el;
+        })();
 
-        // 👉 IMPORTANT: tell Decap exactly where config.yml is
-        CMS.init({ config: '/admin/config.yml' });
+        // IMPORTANT: point to /admin/config.yml
+        CMS.init({
+          config: '/admin/config.yml'
+        });
 
         booted = true;
       }
 
-      if (document.readyState === 'complete') {
-        boot();
-      } else {
-        window.addEventListener('load', boot);
-      }
+      // Try when page finishes loading
+      window.addEventListener('load', boot);
+      // Fallback: try again after a short delay in case script is slow
+      setTimeout(boot, 2000);
     })();
   </script>
 </body>
