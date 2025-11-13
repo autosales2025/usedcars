@@ -36,18 +36,24 @@
           document.body.appendChild(root);
         }
 
-        CMS.init({ config: '/admin/config.yml' });
+        // Your Decap config is in /admin/config.yml
+        CMS.init();
         booted = true;
       }
 
-      window.addEventListener('DOMContentLoaded', () => {
-        // Try now, then poll briefly in case the script lags a tick
-        if (!boot()) {
-          let tries = 0, tm = setInterval(() => {
-            if (boot() || ++tries > 50) clearInterval(tm);
-          }, 100);
+      // Try multiple times, then give up.
+      let tries = 0;
+      const timer = setInterval(function () {
+        tries++;
+        if (window.CMS || window.DecapCms) {
+          clearInterval(timer);
+          boot();
+        } else if (tries > 60) {
+          clearInterval(timer);
+          const el = document.getElementById('cms-root');
+          if (el) el.textContent = 'CMS failed to load. Please refresh.';
         }
-      }, { once: true });
+      }, 250);
     })();
   </script>
 </body>
